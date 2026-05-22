@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ChatWave — Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:#0a0a0f; --surface:#13131a; --surface2:#1c1c27;
+      --accent:#7c6dfa; --accent2:#fa6d9a; --text:#f0f0f8;
+      --muted:#6b6b80; --border:rgba(255,255,255,0.07); --glow:rgba(124,109,250,0.2);
+    }
+    body { background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif; min-height:100vh; display:flex; align-items:center; justify-content:center; }
+    body::before { content:''; position:fixed; width:600px; height:600px; background:radial-gradient(circle,rgba(124,109,250,0.12) 0%,transparent 70%); top:-200px; left:-200px; pointer-events:none; }
+    body::after  { content:''; position:fixed; width:500px; height:500px; background:radial-gradient(circle,rgba(250,109,154,0.08) 0%,transparent 70%); bottom:-150px; right:-150px; pointer-events:none; }
+
+    .card { background:var(--surface); border:1px solid var(--border); border-radius:24px; padding:48px 44px; width:100%; max-width:420px; position:relative; z-index:1; box-shadow:0 32px 64px rgba(0,0,0,0.4); animation:slideUp .5s cubic-bezier(.22,1,.36,1) both; }
+    @keyframes slideUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+
+    .logo { display:flex; align-items:center; gap:10px; margin-bottom:32px; }
+    .logo-icon { width:38px; height:38px; background:linear-gradient(135deg,var(--accent),var(--accent2)); border-radius:11px; display:flex; align-items:center; justify-content:center; font-size:18px; }
+    .logo-text { font-family:'Syne',sans-serif; font-weight:800; font-size:20px; background:linear-gradient(90deg,var(--accent),var(--accent2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+
+    h1 { font-family:'Syne',sans-serif; font-size:26px; font-weight:700; margin-bottom:6px; }
+    .subtitle { color:var(--muted); font-size:14px; margin-bottom:32px; }
+
+    .field { margin-bottom:16px; }
+    label { display:block; font-size:11px; font-weight:500; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-bottom:7px; }
+    input { width:100%; background:var(--surface2); border:1px solid var(--border); border-radius:11px; padding:13px 15px; color:var(--text); font-family:'DM Sans',sans-serif; font-size:14px; outline:none; transition:border-color .2s, box-shadow .2s; }
+    input::placeholder { color:var(--muted); }
+    input:focus { border-color:var(--accent); box-shadow:0 0 0 3px var(--glow); }
+
+    .errors { background:rgba(250,109,109,0.1); border:1px solid rgba(250,109,109,0.3); border-radius:10px; padding:10px 14px; margin-bottom:16px; font-size:13px; color:#fa9090; }
+    .errors ul { list-style:none; }
+
+    button { width:100%; margin-top:6px; padding:14px; background:linear-gradient(135deg,var(--accent),var(--accent2)); border:none; border-radius:11px; color:#fff; font-family:'Syne',sans-serif; font-size:15px; font-weight:700; cursor:pointer; transition:opacity .2s, transform .15s; }
+    button:hover { opacity:.9; transform:translateY(-1px); }
+
+    .bottom-link { text-align:center; margin-top:24px; font-size:13px; color:var(--muted); }
+    .bottom-link a { color:var(--accent); text-decoration:none; font-weight:500; }
+    .bottom-link a:hover { text-decoration:underline; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo">
+      <div class="logo-icon">💬</div>
+      <span class="logo-text">ChatWave</span>
+    </div>
+
+    <h1>Welcome back</h1>
+    <p class="subtitle">Sign in to continue chatting.</p>
+
+    {% if form.errors %}
+      <div class="errors">
+        <ul>{% for field in form %}{% for error in field.errors %}<li>{{ error }}</li>{% endfor %}{% endfor %}
+        {% for error in form.non_field_errors %}<li>{{ error }}</li>{% endfor %}</ul>
+      </div>
+    {% endif %}
+
+    <form method="post">
+      {% csrf_token %}
+      <div class="field">
+        <label>Username</label>
+        <input type="text" name="username" placeholder="Enter your username" autofocus>
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" name="password" placeholder="Enter your password">
+      </div>
+      <button type="submit">Sign in →</button>
+    </form>
+
+    <div class="bottom-link">
+      Don't have an account? <a href="/chat/register/">Register</a>
+    </div>
+  </div>
+</body>
+</html>

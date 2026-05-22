@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ChatWave — Join a Room</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0f;
+      --surface: #13131a;
+      --surface2: #1c1c27;
+      --accent: #7c6dfa;
+      --accent2: #fa6d9a;
+      --text: #f0f0f8;
+      --muted: #6b6b80;
+      --border: rgba(255,255,255,0.07);
+      --glow: rgba(124,109,250,0.25);
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Ambient background blobs */
+    body::before {
+      content: '';
+      position: fixed;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(124,109,250,0.15) 0%, transparent 70%);
+      top: -200px; left: -200px;
+      pointer-events: none;
+      animation: drift 8s ease-in-out infinite alternate;
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(250,109,154,0.1) 0%, transparent 70%);
+      bottom: -150px; right: -150px;
+      pointer-events: none;
+      animation: drift 10s ease-in-out infinite alternate-reverse;
+    }
+
+    @keyframes drift {
+      from { transform: translate(0,0); }
+      to   { transform: translate(40px, 30px); }
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 52px 48px;
+      width: 100%;
+      max-width: 440px;
+      position: relative;
+      z-index: 1;
+      box-shadow: 0 0 80px rgba(124,109,250,0.08), 0 32px 64px rgba(0,0,0,0.4);
+      animation: slideUp 0.6s cubic-bezier(0.22,1,0.36,1) both;
+    }
+
+    @keyframes slideUp {
+      from { opacity:0; transform: translateY(30px); }
+      to   { opacity:1; transform: translateY(0); }
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 36px;
+    }
+    .logo-icon {
+      width: 40px; height: 40px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+    }
+    .logo-text {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 22px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: 30px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 8px;
+    }
+    .subtitle {
+      color: var(--muted);
+      font-size: 15px;
+      margin-bottom: 36px;
+    }
+
+    .field {
+      margin-bottom: 18px;
+    }
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    input {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    input::placeholder { color: var(--muted); }
+    input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--glow);
+    }
+
+    button {
+      width: 100%;
+      margin-top: 8px;
+      padding: 15px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border: none;
+      border-radius: 12px;
+      color: #fff;
+      font-family: 'Syne', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s;
+      position: relative;
+      overflow: hidden;
+    }
+    button:hover { opacity: 0.9; transform: translateY(-1px); }
+    button:active { transform: translateY(0); }
+
+    .divider {
+      display: flex; align-items: center; gap: 12px;
+      margin: 28px 0 20px;
+      color: var(--muted); font-size: 12px;
+    }
+    .divider::before, .divider::after {
+      content: ''; flex: 1;
+      height: 1px; background: var(--border);
+    }
+
+    .rooms-hint {
+      display: flex; gap: 8px; flex-wrap: wrap;
+    }
+    .room-pill {
+      padding: 6px 14px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      font-size: 13px;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .room-pill:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(124,109,250,0.08);
+    }
+
+    .error {
+      color: #fa6d6d;
+      font-size: 13px;
+      margin-top: 10px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo">
+      <div class="logo-icon">💬</div>
+      <span class="logo-text">ChatWave</span>
+    </div>
+
+    <h1>Join the conversation</h1>
+    <p class="subtitle">Pick a name and a room to get started.</p>
+
+    <div class="field">
+      <label>Your Name</label>
+      <input id="username-input" type="text" placeholder="e.g. Yash" autocomplete="off">
+    </div>
+
+    <div class="field">
+      <label>Room Name</label>
+      <input id="room-name-input" type="text" placeholder="e.g. general" autocomplete="off">
+    </div>
+
+    <p class="error" id="error-msg">Please enter both your name and a room name.</p>
+
+    <button onclick="joinRoom()">Enter Room →</button>
+
+    {% comment %} <div class="divider">or try a popular room</div>
+
+    <div class="rooms-hint">
+      <span class="room-pill" onclick="setRoom('general')">🌐 general</span>
+      <span class="room-pill" onclick="setRoom('random')">🎲 random</span>
+      <span class="room-pill" onclick="setRoom('tech')">💻 tech</span>
+      <span class="room-pill" onclick="setRoom('gaming')">🎮 gaming</span>
+    </div> {% endcomment %}
+  </div>
+
+  <script>
+    function setRoom(name) {
+      document.getElementById('room-name-input').value = name;
+      document.getElementById('username-input').focus();
+    }
+
+    function joinRoom() {
+      const username = document.getElementById('username-input').value.trim();
+      const room = document.getElementById('room-name-input').value.trim();
+      const err = document.getElementById('error-msg');
+      if (username && room) {
+        err.style.display = 'none';
+        localStorage.setItem('chat_username', username);
+        window.location.href = '/chat/' + room + '/';
+      } else {
+        err.style.display = 'block';
+      }
+    }
+
+    ['username-input','room-name-input'].forEach(id => {
+      document.getElementById(id).addEventListener('keypress', e => {
+        if (e.key === 'Enter') joinRoom();
+      });
+    });
+  </script>
+</body>
+</html>
